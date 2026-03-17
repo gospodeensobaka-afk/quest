@@ -35,7 +35,7 @@ const QUESTS = [
         riddleImage:  "images/riddle1.jpg",  // картинка загадки
         ciphers: [
             { label: "Атбаш",   image: "images/atbash.jpeg" },
-            { label: "Браиль;",  image: "brai.jpeg" },
+            { label: "Браиль;",  image: "brail.jpeg" },
            { label: "Все;",  image: "images/all.jpeg" },
             // добавляй сколько угодно дешифровщиков
         ],
