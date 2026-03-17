@@ -13,7 +13,7 @@ const ACCESS_PASSWORDS = ["88888888"];
 
 // URL файла текущего состояния квеста (лежит на GitHub Pages)
 // Этот файл ты будешь обновлять через Telegram бота
-const QUEST_STATE_URL = "./quest-state.json";
+const QUEST_STATE_URL = "./qstate.json";
 // Пример quest-state.json:
 // { "current": 1, "updated_at": 1710000000 }
 
