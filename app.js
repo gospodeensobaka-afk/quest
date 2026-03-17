@@ -14,7 +14,7 @@ const MAP_ZOOM           = 15;
 const QUESTS = [
     {
         id: 1,
-        riddleImage: "images/1.jpg",
+        riddleImage: "images/1.jpeg",
         ciphers: [
             { label: "Атбаш",  image: "images/atbash.jpeg" },
             { label: "Брайль", image: "images/brail.jpeg" },
