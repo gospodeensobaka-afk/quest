@@ -8,7 +8,7 @@
    ================================================================ */
 
 // Пароли для входа (можно добавить сколько угодно)
-const ACCESS_PASSWORDS = ["kazan2025", "quest1", "1234"];
+const ACCESS_PASSWORDS = ["88888888"];
 // ↑ ЗАМЕНИ на свои пароли перед деплоем
 
 // URL файла текущего состояния квеста (лежит на GitHub Pages)
@@ -34,8 +34,9 @@ const QUESTS = [
         id: 1,
         riddleImage:  "images/riddle1.jpg",  // картинка загадки
         ciphers: [
-            { label: "Атбаш",   image: "images/cipher_atbash.jpg" },
-            { label: "Цезарь",  image: "images/cipher_caesar.jpg" },
+            { label: "Атбаш",   image: "images/atbash.jpeg" },
+            { label: "Браиль;",  image: "brai.jpeg" },
+           { label: "Все;",  image: "images/all.jpeg" },
             // добавляй сколько угодно дешифровщиков
         ],
         answer: "казань",                    // правильный ответ (нижний регистр)
