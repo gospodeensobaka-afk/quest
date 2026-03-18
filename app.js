@@ -3,8 +3,13 @@
    ======================================================== */
 
 const ACCESS_PASSWORDS   = ["88888888"];
-const QUEST_STATE_URL    = "./qstate.json";
-const POLL_INTERVAL_MS   = 5000;
+
+// JSONBin — без кэша CDN, отклик 1-2 сек
+const JSONBIN_ID  = "69ba4f6daa77b81da9f55118";
+const JSONBIN_KEY = "$2a$10$lPoCXFWL4UcrxKEPIIww0um/CPiwfXALbgpoSVrvGdFd94qJFrk6m";
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`;
+
+const POLL_INTERVAL_MS = 2000;
 const MAP_CENTER         = [49.1218, 55.7873];
 const MAP_ZOOM           = 15;
 
@@ -14,7 +19,7 @@ const MAP_ZOOM           = 15;
 const QUESTS = [
     {
         id: 1,
-        riddleImage: "images/1.jpeg",
+        riddleImage: "images/riddle1.jpg",
         ciphers: [
             { label: "Атбаш",  image: "images/atbash.jpeg" },
             { label: "Брайль", image: "images/brail.jpeg" },
@@ -129,7 +134,7 @@ function backToQuest() {
 }
 
 /* ================================================================
-   POLLING — cache:no-store чтобы GitHub не кэшировал
+   POLLING — JSONBin, без CDN кэша, интервал 2 сек
    ================================================================ */
 function startPolling() {
     pollOnce();
@@ -138,20 +143,17 @@ function startPolling() {
 
 async function pollOnce() {
     try {
-        const res = await fetch(QUEST_STATE_URL + "?t=" + Date.now(), {
-            cache: "no-store"
+        const res = await fetch(JSONBIN_URL, {
+            headers: { "X-Master-Key": JSONBIN_KEY }
         });
 
         if (!res.ok) {
-            console.warn("Poll HTTP error:", res.status);
+            console.warn("JSONBin HTTP error:", res.status);
             return;
         }
 
-        const text = await res.text();
-        console.log("qstate raw:", text);          // видим что пришло
-
-        const data = JSON.parse(text);
-        const id   = Number(data.current);         // всегда число
+        const data = await res.json();
+        const id   = Number(data.record.current);
 
         console.log("current:", id, "| lastPolled:", lastPolledId);
 
