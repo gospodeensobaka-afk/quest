@@ -19,17 +19,17 @@ const MAP_ZOOM           = 15;
 const QUESTS = [
     {
         id: 1,
-        riddleImage: "images/3.jpeg",
+        riddleImage: "images/riddle1.jpg",
         ciphers: [
             { label: "Атбаш",  image: "images/atbash.jpeg" },
             { label: "Брайль", image: "images/brail.jpeg" },
             { label: "Все",    image: "images/all.jpeg" },
         ],
-        answer: "Дом Шамиля",
+        answer: "казань",
         destination: {
             lat:  55.77753419082225,
             lng:  49.115107142701646,
-            hint: "Дом Шамиля",
+            hint: "Идите к угловому зданию\nна площади Свободы",
             polygon: [
                 [49.115107142701646, 55.77753419082225],
                 [49.11546328035493,  55.77764132496114],
@@ -38,39 +38,24 @@ const QUESTS = [
                 [49.11537838707676,  55.77741308231077],
                 [49.115258294147765, 55.77737698258528],
                 [49.11510921327016,  55.777536519828345],
-                [49.115107142701646, 55.77753419082225]
+                [49.115107142701646, 55.77753419082225]  // закрыть контур
             ],
             radius: 30
         }
     },
     {
         id: 2,
-        riddleImage: "images/2.jpeg",
+        riddleImage: "images/riddle2.jpg",
         ciphers: [
-            { label: "Атбаш", image: "images/atbash.jpeg" },
+            { label: "Решётка", image: "images/cipher_grid.jpg" },
         ],
-        answer: "Седьмая поликлиника",
+        answer: "петропавловский",
         destination: {
-            lat:  55.77870572517725,
-            lng:  49.11576943772201,
-            hint: "Седьмая поликлиника",
-            polygon: [
-                [49.11576943772201,   55.77870572517725],
-                [49.1159626585748,    55.77849236893215],
-                [49.117230375878876,  55.778852821038356],
-                [49.117110201933,     55.77897738827048],
-                [49.11659180452261,   55.778826317320664],
-                [49.11653053937445,   55.778900527686204],
-                [49.11640094002246,   55.77886872326147],
-                [49.116465804718786,  55.77879999635692],
-                [49.11633354482052,   55.778761416690145],
-                [49.116301714637586,  55.77879382361277],
-                [49.11603598700569,   55.77871821062658],
-                [49.115986595342804,  55.77877037038468],
-                [49.115771831848775,  55.77870743642643],
-                [49.11576943772201,   55.77870572517725]  // закрыть контур
-            ],
-            radius: 40
+            lat:     55.79336,
+            lng:     49.114008,
+            hint:    "Петропавловский собор\nул. Мусы Джалиля, 21",
+            polygon: null,
+            radius:  40
         }
     },
 ];
@@ -112,6 +97,23 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ================================================================
    ЭКРАН ПАРОЛЯ
    ================================================================ */
+/* ================================================================
+   PRELOAD — грузим все картинки фоном сразу после входа
+   ================================================================ */
+function preloadAllImages() {
+    const allSrcs = [];
+    QUESTS.forEach(q => {
+        if (q.riddleImage) allSrcs.push(q.riddleImage);
+        (q.ciphers || []).forEach(c => { if (c.image) allSrcs.push(c.image); });
+    });
+    // Дедупликация
+    [...new Set(allSrcs)].forEach(src => {
+        const img = new Image();
+        img.src = src;
+    });
+    console.log(`Preloading ${allSrcs.length} images…`);
+}
+
 function submitPassword() {
     const input = document.getElementById("passwordInput");
     const error = document.getElementById("passwordError");
@@ -122,6 +124,7 @@ function submitPassword() {
         showScreen("questScreen");
         initMap();
         startPolling();
+        preloadAllImages();
     } else {
         error.classList.add("show");
         input.classList.add("shake");
@@ -237,10 +240,23 @@ function buildCipherButtons(ciphers) {
     empty.classList.add("hidden");
     preview.innerHTML = `<span class="cipher-preview-placeholder">Выберите дешифровщик</span>`;
 
+    // Горизонтальный скролл — все кнопки в одну строку
+    container.style.cssText = `
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 8px;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    `;
+
     ciphers.forEach((c, i) => {
         const btn = document.createElement("button");
         btn.className   = "cipher-btn";
         btn.textContent = c.label;
+        btn.style.flexShrink = "0";   // не сжимать кнопки
         btn.onclick     = () => selectCipher(c, btn, preview);
         container.appendChild(btn);
         if (i === 0) setTimeout(() => btn.click(), 100);
