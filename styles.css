@@ -369,8 +369,13 @@ html, body {
 .cipher-buttons {
     display: flex;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
 }
+.cipher-buttons::-webkit-scrollbar { display: none; }
 
 .cipher-btn {
     height: 38px;
