@@ -269,6 +269,7 @@ html, body {
     object-fit: contain;
     padding: 12px;
     animation: fadeIn 0.35s ease;
+    touch-action: pinch-zoom;
 }
 
 .riddle-number {
@@ -285,6 +286,34 @@ html, body {
     padding: 4px 10px;
     border-radius: 20px;
     border: 1px solid var(--border);
+}
+
+/* ── ТУМБЛЕР КЛАВИАТУРЫ ── */
+#keyboardToggle {
+    display: flex;
+    gap: 8px;
+    padding: 6px 14px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+#keyboardToggle button {
+    height: 34px;
+    padding: 0 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-family: Mulish, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--surface);
+    color: var(--text);
+}
+#keyboardToggle button.active {
+    background: var(--gold);
+    color: #080B11;
+    border-color: var(--gold);
 }
 
 /* ── СРЕДНЯЯ ПОЛОСА: ответ ── */
@@ -587,6 +616,7 @@ html, body {
     object-fit: contain;
     border-radius: 12px;
     display: block;
+    touch-action: pinch-zoom;
 }
 .cipher-overlay-close {
     position: absolute;
