@@ -1,16 +1,21 @@
 /* ========================================================
-   QUEST APP — APP.JS (VK Mini App version)
-   Polling: jsonbin.io (не зависит от домена сервера,
-   поэтому работает у туристов без VPN)
+   QUEST APP — APP.JS
+   Polling: aguidekzn.ru/api/quest/state
    ======================================================== */
 
 const ACCESS_PASSWORDS = ["88888888"];
 
-// Состояние квеста читаем из jsonbin.io — не зависит от твоего домена,
-// поэтому туристам не нужен VPN, чтобы это увидеть.
-const JSONBIN_ID    = "6a611608da38895dfe80e7aa";
-const JSONBIN_KEY   = "$2a$10$BGdTf9HzuQ8IaHVTBnp/hevLYS0wmW2BrH/pGI6oFMtv7c.zocgfG";
-const JSONBIN_URL   = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`;
+// Свой сервер вместо JSONBin
+const API_BASE      = "https://aguidekzn.ru/api";
+
+// Состояние квеста читаем из GitHub — работает даже там, где aguidekzn.ru
+// недоступен туристам. Пульт (quest-admin) пишет в этот файл через сервер.
+// ЗАМЕНИТЕ your-username / your-repo-name на свои реальные значения.
+const GH_OWNER  = "gospodeensobaka-afk";
+const GH_REPO   = "quest";
+const GH_BRANCH = "main";
+const STATE_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/state.json`;
+
 const POLL_INTERVAL = 2000;
 const MAP_CENTER    = [49.1155, 55.7785];
 const MAP_ZOOM      = 16;
@@ -487,13 +492,11 @@ function startPolling() {
 
 async function pollOnce() {
     try {
-        const res = await fetch(JSONBIN_URL, {
-            cache: "no-store",
-            headers: { "X-Master-Key": JSONBIN_KEY }
-        });
+        // ?t=... — сбрасываем CDN-кэш raw.githubusercontent.com на каждый опрос
+        const res = await fetch(`${STATE_URL}?t=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) return;
         const data = await res.json();
-        const id   = Number(data.record.current);
+        const id   = Number(data.current);
         if (id !== lastPolledId) {
             lastPolledId = id;
             if (id === 0) showWaiting();
